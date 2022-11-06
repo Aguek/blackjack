@@ -43,10 +43,8 @@ computer_cards = []
 def deal_card(rounds):
     number_of_loops = 0
     for item in cards:
-        user_random_cards = random.choice(cards)
-        user_cards.append(user_random_cards)
-        computer_random_cards = random.choice(cards)
-        computer_cards.append(computer_random_cards)
+        user_random_cards = user_cards.append(random.choice(cards))
+        computer_random_cards = computer_cards.append(random.choice(cards))
         number_of_loops += 1
         if sum(user_cards) > 21 or sum(computer_cards) > 21:
             has_game_ended = True
@@ -61,6 +59,7 @@ deal_card(2)
 #user_cards = []
 #computer_cards = []
 def calculate_score(list_of_cards):
+    """"This is a function to calculate the score"""
     score = sum(list_of_cards)
     if score == 21:
         return 0
@@ -72,12 +71,15 @@ def calculate_score(list_of_cards):
         has_game_ended = True
 
 def is_black_jack():
+    """
+    This is a function to check if the player or the dealer has got a black jack.
+    """
     if calculate_score(user_cards) == 0 or calculate_score(computer_cards) == 0:
         has_game_ended = True
     elif input("Type 'y' if you would like to draw another card and 'n' if you are done.\n").lower() == "y":
         deal_card(1)
         computer_cards.pop(-1)
-        while sum(computer_cards) < 17:
+        while sum(computer_cards) < 17 and sum(computer_cards) != 0:
             deal_card(1)
             user_cards.pop(-1)
     
