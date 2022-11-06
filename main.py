@@ -1,147 +1,77 @@
-############### Blackjack Project #####################
 import random
-from tkinter import Y
 from art import logo
-#Difficulty Normal 😎: Use all Hints below to complete the project.
-#Difficulty Hard 🤔: Use only Hints 1, 2, 3 to complete the project.
-#Difficulty Extra Hard 😭: Only use Hints 1 & 2 to complete the project.
-#Difficulty Expert 🤯: Only use Hint 1 to complete the project.
 
-############### Our Blackjack House Rules #####################
 
-## The deck is unlimited in size. 
-## There are no jokers. 
-## The Jack/Queen/King all count as 10.
-## The the Ace can count as 11 or 1.
-## Use the following list as the deck of cards:
-print(logo)
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-## The cards in the list have equal probability of being drawn.
-## Cards are not removed from the deck as they are drawn.
-## The computer is the dealer.
 
-##################### Hints #####################
-
-#Hint 1: Go to this website and try out the Blackjack game: 
-#   https://games.washingtonpost.com/games/blackjack/
-#Then try out the completed Blackjack project here: 
-#   http://blackjack-final.appbrewery.repl.run
-
-#Hint 2: Read this breakdown of program requirements: 
-#   http://listmoz.com/view/6h34DJpvJBFVRlZfJvxF
-#Then try to create your own flowchart for the program.
-
-#Hint 3: Download and read this flow chart I've created: 
-#   https://drive.google.com/uc?export=download&id=1rDkiHCrhaf9eX7u7yjM1qwSuyEk-rPnt
-
-#Hint 4: Create a deal_card() function that uses the List below to *return* a random card.
-#11 is the Ace.
-#cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 has_game_ended = False
-user_cards = []
-computer_cards = []
-def deal_card(rounds):
-    number_of_loops = 0
-    for item in cards:
-        user_random_cards = user_cards.append(random.choice(cards))
-        computer_random_cards = computer_cards.append(random.choice(cards))
-        number_of_loops += 1
-        if sum(user_cards) > 21 or sum(computer_cards) > 21:
-            has_game_ended = True
-            exit
-        if number_of_loops == rounds:
-            break
-    print(f"Your cards: {user_cards}, current score: {sum(user_cards)}")
-    print(f"Computer's first card: {computer_cards[0]}")
+def play_game():
+    print(logo)
+    def deal_card():
+        random_card = random.choice(cards)
+        return random_card
 
-deal_card(2)
-#Hint 5: Deal the user and computer 2 cards each using deal_card() and append().
-#user_cards = []
-#computer_cards = []
-def calculate_score(list_of_cards):
-    """"This is a function to calculate the score"""
-    score = sum(list_of_cards)
-    if score == 21:
-        return 0
-    elif score > 21 and 11 in list_of_cards:
-        list_of_cards.remove(11)
-        list_of_cards.append(1)
-        score = sum(list_of_cards)
-    elif score > 21:
+    user_cards = []
+    computer_cards = []
+    #deal the user and computer two cards each using the deal_card() function.
+
+    for _ in range(2):
+        user_cards.append(deal_card())
+        computer_cards.append(deal_card())
+
+    print(f"Your cards are {user_cards}, current sum: {sum(user_cards)}")
+    print(f"Computer's first card is {computer_cards[0]}")
+    def calculate_score(cards):
+        score = sum(cards)
+        if score == 21 and len(cards) == 2:
+            # print(f"Black jack for {cards}")
+            return 0
+        elif 11 in cards and sum(cards) > 21:
+            cards.remove(11)
+            cards.append(1)
+        return score
+
+    user_score = calculate_score(user_cards)
+    computer_score = calculate_score(computer_cards)
+
+
+        
+    if user_score == 0 or computer_score == 0 or user_score > 21:
         has_game_ended = True
-
-def is_black_jack():
-    """
-    This is a function to check if the player or the dealer has got a black jack.
-    """
-    if calculate_score(user_cards) == 0 or calculate_score(computer_cards) == 0:
-        has_game_ended = True
-    elif input("Type 'y' if you would like to draw another card and 'n' if you are done.\n").lower() == "y":
-        deal_card(1)
-        computer_cards.pop(-1)
-        while sum(computer_cards) < 17 and sum(computer_cards) != 0:
-            deal_card(1)
-            user_cards.pop(-1)
-    
-is_black_jack()
-    
-
-def compare(u_score, c_score):
-    if u_score == c_score:
-        print("It's a draw")
-    elif u_score == 0:
-        print("You win, you have a black jack")
-    elif c_score == 0:
-        print("You lose, opponent has a black jack")
-    elif c_score == 21:
-        print("You lose, computer wins.")
-    elif u_score == 21:
-        print("You win.")
-    elif u_score > 21:
-        print("You lose.")
-    elif c_score > 21:
-        print("You win.")
     else:
-        print("You lose") if sum(computer_cards) > sum(user_cards) else print("You win")
-    print(f"Your cards: {user_cards}, current score: {sum(user_cards)}")
-    print(f"Computer's cards: {computer_cards}, current score: {sum(computer_cards)}")
-compare(sum(user_cards),sum(computer_cards))  
-#Hint 6: Create a function called calculate_score() that takes a List of cards as input 
-#and returns the score. 
-#Look up the sum() function to help you do this.
+        should_draw_card = input("Would you like to draw another card? Type 'y' for yes and 'n' for no.\n").lower()
+        if should_draw_card == "y":
+            user_cards.append(deal_card())
+            while sum(computer_cards) < 17:
+                computer_cards.append(deal_card())
+                if computer_score >= 17:
+                    exit
+        else:
+            has_game_ended = True
 
-#Hint 7: Inside calculate_score() check for a blackjack (a hand with only 2 cards: ace + 10) and return 0 instead 
-# of the actual score. 0 will represent a blackjack in our game.
+    def compare(u_score, c_score):
+        if u_score == 0:
+            print("You win, you have a black jack.")
+        elif c_score == 0:
+            print("You lose, opponent has a black jack.")
+        elif u_score == c_score:
+            print("It's a draw")
+        elif c_score == 21:
+            print("You lose, computer wins.")
+        elif u_score == 21:
+            print("You win.")
+        elif u_score > 21:
+            print("You lose.")
+        elif c_score > 21:
+            print("You win.")
+        else:
+            print("You lose") if sum(computer_cards) > sum(user_cards) else print("You win")
+        print(f"Your final cards are {user_cards}, current sum: {sum(user_cards)}")
+        print(f"Computer's cards are {computer_cards}, current sum: {sum(computer_cards)}")
+    compare(sum(user_cards), sum(computer_cards))
 
-#Hint 8: Inside calculate_score() check for an 11 (ace). If the score is already over 21, remove the 11 and replace 
-# it with a 1. You might need to look up append() and remove().
-
-#Hint 9: Call calculate_score(). If the computer or the user has a blackjack (0) or if the user's score is over 21, 
-# then the game ends.
-
-#Hint 10: If the game has not ended, ask the user if they want to draw another card. If yes, 
-# then use the deal_card() function to add another card to the user_cards List. If no, then the game has ended.
-
-#Hint 11: The score will need to be rechecked with every new card drawn and the checks
-# in Hint 9 need to be repeated until the game ends.
-
-#Hint 12: Once the user is done, it's time to let the computer play. The computer should keep drawing cards as 
-# long as it has a score less than 17.
-
-#Hint 13: Create a function called compare() and pass in the user_score and computer_score. If the computer and 
-# user both have the same score, then it's a draw. If the computer has a blackjack (0), then the user loses. 
-# If the user has a blackjack (0), then the user wins. If the user_score is over 21, then the user loses. 
-# If the computer_score is over 21, then the computer loses. If none of the above, then the player with the highest 
-# score wins.
-
-#Hint 14: Ask the user if they want to restart the game. If they answer yes, clear the console and start a new game 
-# of blackjack and show the logo from art.py.
-
-if input("Would you like to start again? Type 'y' for yes and 'n' for no.\n").lower() == "y":
-    user_cards.clear()
-    computer_cards.clear()
-    deal_card(2)
-    is_black_jack()
-    compare(sum(user_cards),sum(computer_cards))  
-else: 
+begin_again = input("Would you like to play the game of Black Jack? Type 'y' for yes and 'n' for no.")
+if begin_again == "y":
+    play_game()
+else:
     exit
