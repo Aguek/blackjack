@@ -89,6 +89,10 @@ is_black_jack()
 def compare(u_score, c_score):
     if u_score == c_score:
         print("It's a draw")
+    elif u_score == 0:
+        print("You win, you have a black jack")
+    elif c_score == 0:
+        print("You lose, opponent has a black jack")
     elif c_score == 21:
         print("You lose, computer wins.")
     elif u_score == 21:
